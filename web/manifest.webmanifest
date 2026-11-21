@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "#Infinity — Everything in one place",
+  "short_name": "#Infinity",
+  "description": "Offline-first personal workspace with practical tools for everyday life.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#091426",
+  "theme_color": "#091426",
+  "orientation": "any",
+  "lang": "en",
+  "icons": [
+    {"src": "./assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "./assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
