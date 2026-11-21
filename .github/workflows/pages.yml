@@ -45,7 +45,7 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v4
   android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -57,7 +57,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - uses: android-actions/setup-android@v3
       - run: unzip -q hash-infinity-v2-source.zip
       - name: Build and verify Android preview APK
         working-directory: hash-infinity
@@ -68,7 +67,8 @@ jobs:
           mkdir -p android/app/src/main/res/drawable-nodpi
           cp web/assets/icon-512.png android/app/src/main/res/drawable-nodpi/infinity_icon.png
           sed -i -E 's|@mipmap/ic_launcher(_round)?|@drawable/infinity_icon|g' android/app/src/main/AndroidManifest.xml
-          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+          test -f "$ANDROID_HOME/platforms/android-36/android.jar"
+          test -x "$ANDROID_HOME/build-tools/36.0.0/apksigner"
           (cd android && bash ./gradlew --no-daemon assembleDebug)
           cp android/app/build/outputs/apk/debug/app-debug.apk ../hash-infinity-v2.apk
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify ../hash-infinity-v2.apk
