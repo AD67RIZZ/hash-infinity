@@ -10,15 +10,8 @@ concurrency:
   group: pages
   cancel-in-progress: true
 jobs:
-  deploy:
+  web:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,6 +32,16 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: hash-infinity/web
+  deploy:
+    needs: web
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
   android:
@@ -54,6 +57,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+      - uses: android-actions/setup-android@v3
       - run: unzip -q hash-infinity-v2-source.zip
       - name: Build and verify Android preview APK
         working-directory: hash-infinity
@@ -76,7 +80,7 @@ jobs:
           path: hash-infinity-v2.apk
           if-no-files-found: error
   release:
-    needs: [android, deploy]
+    needs: android
     runs-on: ubuntu-latest
     permissions:
       contents: write
